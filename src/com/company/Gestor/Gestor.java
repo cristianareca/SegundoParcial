@@ -20,10 +20,10 @@ public class Gestor {
         return gestor;
     }
 
-    public boolean crearBiciusuario(String id, String username, String direccion, String telefono) {
+    public boolean crearBiciusuario(String correo, String contrasena, String id, String username, String direccion, String telefono) {
 
         if (indexOf(id, "Biciusuario") == -1) {
-            componentes.add(new Biciusuario(id, username, direccion, telefono));
+            componentes.add(new Biciusuario(correo, contrasena,id, username, direccion, telefono));
             System.out.println("Se agregó el biciusuario con ID " + id);
             return true;
         } else {
@@ -73,10 +73,10 @@ public class Gestor {
         }
     }
 
-    public boolean crearEmpresa(String nit, String nombre, String direccion) {
+    public boolean crearEmpresa(String correo, String contrasena,String nit, String nombre, String direccion) {
 
         if (indexOf(nit, "Empresa") == -1) {
-            componentes.add(new Empresa(nit, nombre, direccion));
+            componentes.add(new Empresa(correo,contrasena,nit, nombre, direccion));
             System.out.println("Se agregó empresa con NIT " + nit);
             return true;
         } else {

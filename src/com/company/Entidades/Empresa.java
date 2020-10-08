@@ -4,12 +4,16 @@ import java.util.ArrayList;
 
 public class Empresa implements Componente {
 
+    private String correo;
+    private String contrasena;
     private String NIT;
     private String nombre;
     private String direccion;
-    private ArrayList <Componente> componentes = new ArrayList<Componente>();
+    private ArrayList<Componente> componentes = new ArrayList<Componente>();
 
-    public Empresa(String NIT, String nombre, String direccion) {
+    public Empresa(String correo, String contrasena, String NIT, String nombre, String direccion) {
+        this.correo = correo;
+        this.contrasena = contrasena;
         this.NIT = NIT;
         this.nombre = nombre;
         this.direccion = direccion;
@@ -45,6 +49,22 @@ public class Empresa implements Componente {
 
     public void agregarComponente(Componente componente) {
         componentes.add(componente);
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     public void despedirEmpleado(String id){
