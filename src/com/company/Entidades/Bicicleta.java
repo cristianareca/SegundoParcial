@@ -1,6 +1,6 @@
 package com.company.Entidades;
 
-public class Bicicleta implements Componente {
+public class Bicicleta{
 
     private String serial;
     private String marca;
@@ -40,7 +40,6 @@ public class Bicicleta implements Componente {
 
     }
 
-    @Override
     public void mostrarInformacion(){
         System.out.println("        Dueño de Bicicleta");
         System.out.println ("       Bicicleta{" +

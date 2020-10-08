@@ -47,9 +47,7 @@ public class Empresa implements Componente {
         return componentes;
     }
 
-    public void agregarComponente(Componente componente) {
-        componentes.add(componente);
-    }
+
 
     public String getCorreo() {
         return correo;
@@ -67,6 +65,10 @@ public class Empresa implements Componente {
         this.contrasena = contrasena;
     }
 
+    public void agregarComponente(Componente componente) {
+        componentes.add(componente);
+    }
+
     public void despedirEmpleado(String id){
         for (int i = 0; i <componentes.size(); i++) {
             if(componentes.get(i)instanceof Biciusuario){
@@ -80,12 +82,16 @@ public class Empresa implements Componente {
         componentes.clear();
     }
 
+
+
     @Override
     public void mostrarInformacion() {
 
         System.out.println( "Empresa{" +
-                "NIT='" + NIT + '\'' +
-                ", name='" + nombre + '\'' +
+                "correo='" + correo + '\'' +
+                ", contrasena='" + contrasena + '\'' +
+                ", NIT='" + NIT + '\'' +
+                ", nombre='" + nombre + '\'' +
                 ", direccion='" + direccion + '\'' +
                 '}');
         if(componentes.size()>0){
