@@ -1,29 +1,35 @@
-package com.company.Gestor;
+package com.company.gestor;
 
 
-import com.company.Entidades.Biciusuario;
-import com.company.Entidades.Componente;
-import com.company.Entidades.Empresa;
+import com.company.decorator.Bicicleta;
+import com.company.decorator.EdadDecorator;
+import com.company.decorator.MaterialDecorator;
+import com.company.entidades.BicicletaImpl;
+import com.company.entidades.Biciusuario;
+import com.company.entidades.Componente;
+import com.company.entidades.Empresa;
+import com.company.proxy.GestorInteface;
 
 import java.util.ArrayList;
 
-public class Gestor {
+public class GestorSingleton {
 
     private final ArrayList<Componente> componentes = new ArrayList<Componente>();
+    private static GestorSingleton gestorSingleton = null;
 
-    private static Gestor gestor = null;
 
-    public static Gestor build() {
-        if (gestor == null) {
-            gestor = new Gestor();
+    public static GestorSingleton build() {
+        if (gestorSingleton == null) {
+            gestorSingleton = new GestorSingleton();
         }
-        return gestor;
+        return gestorSingleton;
     }
+
 
     public boolean crearBiciusuario(String correo, String contrasena, String id, String username, String direccion, String telefono) {
 
         if (indexOf(id, "Biciusuario") == -1) {
-            componentes.add(new Biciusuario(correo, contrasena,id, username, direccion, telefono));
+            componentes.add(new Biciusuario(correo, contrasena, id, username, direccion, telefono));
             System.out.println("Se agregó el biciusuario con ID " + id);
             return true;
         } else {
@@ -44,16 +50,18 @@ public class Gestor {
     }
 
 
-    public boolean actualizarBiciusuario(String id, String username, String direccion, String telefono) {
+    public boolean actualizarBiciusuario(String correo, String password, String id, String username, String direccion, String telefono) {
 
 
         int index = indexOf(id, "Biciusuario");
         if (index > -1) {
-                ((Biciusuario) componentes.get(index)).setDireccion(direccion);
-                ((Biciusuario) componentes.get(index)).setNombre(username);
-                ((Biciusuario) componentes.get(index)).setTelefono(telefono);
+            ((Biciusuario) componentes.get(index)).setCorreo(correo);
+            ((Biciusuario) componentes.get(index)).setPassword(password);
+            ((Biciusuario) componentes.get(index)).setDireccion(direccion);
+            ((Biciusuario) componentes.get(index)).setNombre(username);
+            ((Biciusuario) componentes.get(index)).setTelefono(telefono);
             return true;
-        }else{
+        } else {
             System.out.println("Id de Biciusuario no encontrado");
             return false;
         }
@@ -73,10 +81,11 @@ public class Gestor {
         }
     }
 
-    public boolean crearEmpresa(String correo, String contrasena,String nit, String nombre, String direccion) {
+    public boolean crearEmpresa(String correo, String contrasena, String nit, String nombre, String direccion) {
 
         if (indexOf(nit, "Empresa") == -1) {
-            componentes.add(new Empresa(correo,contrasena,nit, nombre, direccion));
+            componentes.add(new Empresa(correo, contrasena, nit, nombre, direccion));
+
             System.out.println("Se agregó empresa con NIT " + nit);
             return true;
         } else {
@@ -98,13 +107,15 @@ public class Gestor {
     }
 
 
-    public boolean actualizarEmpresa(String nit, String nombre, String direccion) {
+    public boolean actualizarEmpresa(String correo, String password, String nit, String nombre, String direccion) {
         int index = indexOf(nit, "Empresa");
         if (index > -1) {
+            ((Empresa) componentes.get(index)).setCorreo(correo);
+            ((Empresa) componentes.get(index)).setContrasena(password);
             ((Empresa) componentes.get(index)).setNombre(nombre);
             ((Empresa) componentes.get(index)).setDireccion(direccion);
             return true;
-        }else{
+        } else {
             System.out.println("NIT de Empresa no encontrado");
             return false;
         }
@@ -114,7 +125,7 @@ public class Gestor {
 
         ArrayList<String> testamento = new ArrayList<String>();
         boolean exito = false;
-        int index = indexOf(nit,"Empresa");
+        int index = indexOf(nit, "Empresa");
 
         if (index > -1) {
             //Esta empresa tiene hijos?
@@ -133,8 +144,8 @@ public class Gestor {
                 }
 
                 //Se borran los hijos dentro del componente y se elimina finalmente la empresa madre
-                ((Empresa) componentes.get(indexOf(nit,"Empresa"))).eliminarTodas();
-                eliminarEmpresa(((Empresa) componentes.get(indexOf(nit,"Empresa"))).getNIT());
+                ((Empresa) componentes.get(indexOf(nit, "Empresa"))).eliminarTodas();
+                eliminarEmpresa(((Empresa) componentes.get(indexOf(nit, "Empresa"))).getNIT());
 
 
             } else {
@@ -149,7 +160,8 @@ public class Gestor {
         return exito;
     }
 
-    public boolean crearConglomerado(String nit_madre, String nit_hija) {
+
+    public boolean crearComposicionEmpresaEmpresa(String nit_madre, String nit_hija) {
 
         boolean exito = false;
         Empresa empresa_madre = consultarEmpresa(nit_madre);
@@ -164,11 +176,12 @@ public class Gestor {
         return exito;
     }
 
-    public boolean contratarEmpleado(String nit, String id) {
+    public boolean crearComposicionEmpresaEmpleado(String nit, String id) {
+
         boolean exito = false;
         if (consultarEmpresa(nit) != null) {
             if (consultarBiciusuario(id) != null) {
-                ((Empresa) componentes.get(indexOf(nit,"Empresa"))).agregarComponente(((Biciusuario) componentes.get(indexOf(id,"Biciusuario"))));
+                ((Empresa) componentes.get(indexOf(nit, "Empresa"))).agregarComponente(componentes.get(indexOf(id, "Biciusuario")));
                 exito = true;
             }
         }
@@ -176,17 +189,46 @@ public class Gestor {
         return exito;
     }
 
-    public boolean despedirEmpleado(String nit, String id) {
+    public boolean eliminarComposicionEmpresaEmpleado(String nit, String id) {
         boolean exito = false;
         if (consultarEmpresa(nit) != null) {
             if (consultarBiciusuario(id) != null) {
-                ((Empresa) componentes.get(indexOf(nit,"Empresa"))).despedirEmpleado(((Biciusuario) componentes.get(indexOf(id,"Biciusuario"))).getId());
+                ((Empresa) componentes.get(indexOf(nit, "Empresa"))).despedirEmpleado(((Biciusuario) componentes.get(indexOf(id, "Biciusuario"))).getId());
                 exito = true;
             }
         }
 
         return exito;
     }
+
+    public boolean agregarBicicleta(String id, String serial, String marca, String color, String edad, String material) {
+        int index = indexOf(id, "Biciusuario");
+
+        if (index > -1) {
+            if (!edad.equals("") && !material.equals("")) {
+                Bicicleta bicicleta = new EdadDecorator(new MaterialDecorator(new BicicletaImpl(serial, marca, color), material), edad);
+                ((Biciusuario) componentes.get(index)).agregarBicicleta(bicicleta);
+                return true;
+
+            } else if (!edad.equals("") && material.equals("")) {
+                Bicicleta bicicleta = new EdadDecorator(new BicicletaImpl(serial, marca, color), edad);
+                ((Biciusuario) componentes.get(index)).agregarBicicleta(bicicleta);
+                return true;
+            } else if (edad.equals("") && !material.equals("")) {
+                Bicicleta bicicleta = new MaterialDecorator(new BicicletaImpl(serial, marca, color),material);
+                ((Biciusuario) componentes.get(index)).agregarBicicleta(bicicleta);
+                return true;
+            } else {
+                Bicicleta bicicleta = new BicicletaImpl(serial,marca,color);
+                ((Biciusuario) componentes.get(index)).agregarBicicleta(bicicleta);
+                return true;
+            }
+        } else {
+            System.out.println("El Id del biciusuario no existe");
+            return false;
+        }
+    }
+
 
     public int indexOf(String identificador, String componente) {
         int index = -1;
@@ -208,5 +250,9 @@ public class Gestor {
             }
         }
         return index;
+    }
+
+    public ArrayList<Componente> getComponentes() {
+        return componentes;
     }
 }

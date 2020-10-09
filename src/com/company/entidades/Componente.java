@@ -1,4 +1,4 @@
-package com.company.Entidades;
+package com.company.entidades;
 
 public interface Componente {
     public void mostrarInformacion();

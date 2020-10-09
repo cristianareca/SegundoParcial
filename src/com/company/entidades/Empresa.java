@@ -1,32 +1,30 @@
-package com.company.Entidades;
+package com.company.entidades;
 
 import java.util.ArrayList;
 
-public class Biciusuario implements Componente{
+public class Empresa implements Componente {
 
     private String correo;
     private String contrasena;
-    private String id;
+    private String NIT;
     private String nombre;
     private String direccion;
-    private String telefono;
-    private ArrayList <Componente> bicicletas = new ArrayList<Componente>();
+    private ArrayList<Componente> componentes = new ArrayList<Componente>();
 
-    public Biciusuario(String correo, String contrasena, String id, String nombre, String direccion, String telefono) {
+    public Empresa(String correo, String contrasena, String NIT, String nombre, String direccion) {
         this.correo = correo;
         this.contrasena = contrasena;
-        this.id = id;
+        this.NIT = NIT;
         this.nombre = nombre;
         this.direccion = direccion;
-        this.telefono = telefono;
     }
 
-    public String getId() {
-        return id;
+    public String getNIT() {
+        return NIT;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setNIT(String NIT) {
+        this.NIT = NIT;
     }
 
     public String getNombre() {
@@ -45,13 +43,11 @@ public class Biciusuario implements Componente{
         this.direccion = direccion;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public ArrayList<Componente> getComponentes() {
+        return componentes;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
+
 
     public String getCorreo() {
         return correo;
@@ -70,25 +66,39 @@ public class Biciusuario implements Componente{
     }
 
     public void agregarComponente(Componente componente) {
-        bicicletas.add(componente);
+        componentes.add(componente);
     }
+
+    public void despedirEmpleado(String id){
+        for (int i = 0; i <componentes.size(); i++) {
+            if(componentes.get(i)instanceof Biciusuario){
+                if(((Biciusuario) componentes.get(i)).getId().equals(id)){
+                    componentes.remove(i);
+                }
+            }
+        }
+    }
+    public void eliminarTodas(){
+        componentes.clear();
+    }
+
 
 
     @Override
     public void mostrarInformacion() {
-        System.out.println("Biciusuario{" +
+
+        System.out.println( "Empresa{" +
                 "correo='" + correo + '\'' +
                 ", contrasena='" + contrasena + '\'' +
-                ", id='" + id + '\'' +
+                ", NIT='" + NIT + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", direccion='" + direccion + '\'' +
-                ", telefono='" + telefono + '\'' +
-                ", bicicletas=" + bicicletas +
                 '}');
-        for(Componente componente:bicicletas){
-            componente.mostrarInformacion();
+        if(componentes.size()>0){
+            System.out.println("CONTIENE");
+            for (Componente componente:componentes){
+                componente.mostrarInformacion();
+            }
         }
-    }
-
-
+       }
 }
